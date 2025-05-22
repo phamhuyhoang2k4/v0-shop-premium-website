@@ -1,13 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, Moon, Sun, Globe } from "lucide-react"
+import { Menu, Moon, Sun, Globe, HeadphonesIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useLanguage } from "@/contexts/language-context"
+import { CartDropdown } from "@/components/cart-dropdown"
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme()
@@ -33,6 +34,16 @@ export function SiteHeader() {
               </Link>
               <Link href="#google" className="text-lg font-medium hover:text-rose-600 transition-colors">
                 Google
+              </Link>
+
+              <Link
+                href="http://zaloapp.com/qr/p/bjm5mxplskn2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg font-medium hover:text-rose-600 transition-colors flex items-center gap-2"
+              >
+                <HeadphonesIcon className="h-5 w-5" />
+                {t("support")}
               </Link>
 
               <div className="border-t pt-6 mt-2">
@@ -82,9 +93,16 @@ export function SiteHeader() {
           </SheetContent>
         </Sheet>
 
-        <div className="text-2xl md:text-3xl font-bold tracking-tight text-rose-600">{t("shop_premium")}</div>
+        <Link
+          href="/"
+          className="text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 hover:text-rose-700 transition-colors"
+        >
+          {t("shop_premium")}
+        </Link>
 
         <div className="flex gap-2">
+          <CartDropdown />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">

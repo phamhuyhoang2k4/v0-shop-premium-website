@@ -3,19 +3,24 @@
 import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Check } from "lucide-react"
+import { Check, ShoppingCart } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { getProductById } from "@/lib/products"
 import { formatCurrency } from "@/lib/utils"
 import { useLanguage } from "@/contexts/language-context"
 import { SiteHeader } from "@/components/site-header"
+import { useCart } from "@/contexts/cart-context"
+import { toast } from "@/components/ui/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { t } = useLanguage()
   const router = useRouter()
+  const { addItem } = useCart()
   const product = getProductById(params.id)
   const [isLoading, setIsLoading] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   if (!product) {
     return <div>Sản phẩm không tồn tại</div>
@@ -25,6 +30,23 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     setIsLoading(true)
     const orderId = `${product.id}-${Date.now()}`
     router.push(`/payment?productName=${encodeURIComponent(product.name)}&amount=${product.price}&orderId=${orderId}`)
+  }
+
+  const handleAddToCart = () => {
+    setIsAddingToCart(true)
+    setTimeout(() => {
+      addItem(product, 1)
+      setIsAddingToCart(false)
+      toast({
+        title: t("added_to_cart"),
+        description: product.name,
+        action: (
+          <ToastAction altText={t("view_cart")} onClick={() => router.push("/cart")}>
+            {t("view_cart")}
+          </ToastAction>
+        ),
+      })
+    }, 500)
   }
 
   return (
@@ -70,8 +92,15 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               <Button size="lg" className="flex-1" onClick={handleBuyNow} disabled={isLoading}>
                 {isLoading ? t("processing") : t("buy_now")}
               </Button>
-              <Button size="lg" variant="outline" className="flex-1">
-                {t("add_to_cart")}
+              <Button
+                size="lg"
+                variant="outline"
+                className="flex-1 flex items-center justify-center gap-2"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {isAddingToCart ? t("adding_to_cart") : t("add_to_cart")}
               </Button>
             </div>
           </div>

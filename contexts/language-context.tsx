@@ -15,6 +15,7 @@ const translations: Translations = {
     // Header
     menu: "Menu",
     shop_premium: "SHOP PREMIUM",
+    support: "Hỗ trợ",
 
     // Categories
     product_categories: "Danh mục sản phẩm",
@@ -38,7 +39,17 @@ const translations: Translations = {
     features: "Tính năng",
     buy_now: "Mua ngay",
     add_to_cart: "Thêm vào giỏ hàng",
+    adding_to_cart: "Đang thêm...",
+    added_to_cart: "Đã thêm vào giỏ hàng",
+    view_cart: "Xem giỏ hàng",
     processing: "Đang xử lý...",
+
+    // Cart
+    cart: "Giỏ hàng",
+    cart_empty: "Giỏ hàng trống",
+    remove: "Xóa",
+    total: "Tổng cộng",
+    checkout: "Thanh toán",
 
     // Payment page
     payment_order: "Thanh toán đơn hàng",
@@ -50,6 +61,7 @@ const translations: Translations = {
     product: "Sản phẩm",
     scan_qr: "Quét mã QR để thanh toán",
     order_expires: "Đơn hàng sẽ hết hạn sau:",
+    order_expired: "Thời gian thanh toán đã hết. Vui lòng thử lại.",
     payment_info: "Thông tin chuyển khoản",
     bank: "Ngân hàng",
     account_holder: "Chủ tài khoản",
@@ -64,6 +76,7 @@ const translations: Translations = {
     all_rights_reserved: "Tất cả các quyền được bảo lưu.",
 
     // Theme
+    theme: "Giao diện",
     light_mode: "Chế độ sáng",
     dark_mode: "Chế độ tối",
 
@@ -76,6 +89,7 @@ const translations: Translations = {
     // Header
     menu: "Menu",
     shop_premium: "SHOP PREMIUM",
+    support: "Support",
 
     // Categories
     product_categories: "Product Categories",
@@ -99,7 +113,17 @@ const translations: Translations = {
     features: "Features",
     buy_now: "Buy Now",
     add_to_cart: "Add to Cart",
+    adding_to_cart: "Adding...",
+    added_to_cart: "Added to Cart",
+    view_cart: "View Cart",
     processing: "Processing...",
+
+    // Cart
+    cart: "Cart",
+    cart_empty: "Your cart is empty",
+    remove: "Remove",
+    total: "Total",
+    checkout: "Checkout",
 
     // Payment page
     payment_order: "Order Payment",
@@ -111,6 +135,7 @@ const translations: Translations = {
     product: "Product",
     scan_qr: "Scan QR code to pay",
     order_expires: "Order expires in:",
+    order_expired: "Payment time has expired. Please try again.",
     payment_info: "Payment Information",
     bank: "Bank",
     account_holder: "Account Holder",
@@ -125,6 +150,7 @@ const translations: Translations = {
     all_rights_reserved: "All rights reserved.",
 
     // Theme
+    theme: "Theme",
     light_mode: "Light Mode",
     dark_mode: "Dark Mode",
 
