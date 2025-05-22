@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { createClient } from "@/lib/supabase/client"
 import type { User, Session } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { useLanguage } from "@/contexts/language-context"
 
 type AuthContextType = {
   user: User | null
@@ -26,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { t } = useLanguage()
 
   useEffect(() => {
     // Chỉ chạy ở phía client
@@ -74,11 +77,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) {
+        // Xử lý lỗi cụ thể
+        if (error.message.includes("provider is not enabled")) {
+          toast({
+            title: t("login_error"),
+            description: t("google_provider_not_enabled"),
+            variant: "destructive",
+          })
+          console.error("Google provider is not enabled in Supabase. Please enable it in the Supabase dashboard.")
+        } else {
+          toast({
+            title: t("login_error"),
+            description: error.message,
+            variant: "destructive",
+          })
+        }
         throw error
       }
     } catch (error) {
       console.error("Error signing in with Google:", error)
-      alert("Đăng nhập thất bại. Vui lòng thử lại sau.")
     }
   }
 
@@ -89,6 +106,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       router.push("/")
     } catch (error) {
       console.error("Error signing out:", error)
+      toast({
+        title: t("logout_error"),
+        description: t("logout_error_description"),
+        variant: "destructive",
+      })
     }
   }
 

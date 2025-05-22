@@ -85,6 +85,10 @@ const translations: Translations = {
     terms: "Điều khoản sử dụng",
     privacy_policy: "Chính sách bảo mật",
     loading: "Đang tải",
+    login_error: "Lỗi đăng nhập",
+    google_provider_not_enabled: "Đăng nhập bằng Google chưa được bật. Vui lòng liên hệ quản trị viên.",
+    logout_error: "Lỗi đăng xuất",
+    logout_error_description: "Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại sau.",
 
     // Profile
     profile: "Hồ sơ",
@@ -183,6 +187,10 @@ const translations: Translations = {
     terms: "Terms of Service",
     privacy_policy: "Privacy Policy",
     loading: "Loading",
+    login_error: "Login Error",
+    google_provider_not_enabled: "Google login is not enabled. Please contact the administrator.",
+    logout_error: "Logout Error",
+    logout_error_description: "An error occurred while logging out. Please try again later.",
 
     // Profile
     profile: "Profile",

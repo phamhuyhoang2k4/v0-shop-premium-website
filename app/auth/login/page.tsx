@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { SiteHeader } from "@/components/site-header"
 import { useAuth } from "@/contexts/auth-context"
 import { useLanguage } from "@/contexts/language-context"
+import { toast } from "@/components/ui/use-toast"
 
 export default function LoginPage() {
   const { t } = useLanguage()
@@ -26,8 +27,19 @@ export default function LoginPage() {
     try {
       setIsLoading(true)
       await signInWithGoogle()
-    } catch (error) {
+    } catch (error: any) {
       console.error("Lỗi đăng nhập:", error)
+
+      // Kiểm tra lỗi cụ thể
+      if (error?.message?.includes("provider is not enabled")) {
+        router.push("/auth/provider-not-enabled")
+      } else {
+        toast({
+          title: t("login_error"),
+          description: error?.message || t("login_error_description"),
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsLoading(false)
     }
