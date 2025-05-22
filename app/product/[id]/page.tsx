@@ -1,17 +1,28 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { ChevronLeft, Check } from "lucide-react"
-import { notFound } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { getProductById } from "@/lib/products"
 import { formatCurrency } from "@/lib/utils"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
+  const router = useRouter()
   const product = getProductById(params.id)
+  const [isLoading, setIsLoading] = useState(false)
 
   if (!product) {
-    notFound()
+    return <div>Sản phẩm không tồn tại</div>
+  }
+
+  const handleBuyNow = () => {
+    setIsLoading(true)
+    const orderId = `${product.id}-${Date.now()}`
+    router.push(`/payment?productName=${encodeURIComponent(product.name)}&amount=${product.price}&orderId=${orderId}`)
   }
 
   return (
@@ -65,8 +76,8 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             )}
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="flex-1">
-                Mua ngay
+              <Button size="lg" className="flex-1" onClick={handleBuyNow} disabled={isLoading}>
+                {isLoading ? "Đang xử lý..." : "Mua ngay"}
               </Button>
               <Button size="lg" variant="outline" className="flex-1">
                 Thêm vào giỏ hàng
