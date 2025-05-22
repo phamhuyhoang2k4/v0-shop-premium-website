@@ -82,7 +82,7 @@ export default function PaymentPage() {
     if (validateForm()) {
       // Cập nhật nội dung chuyển khoản với thông tin người dùng
       const shortProductName = productName.replace("Netflix Premium ", "NF").replace(" Tháng", "T").replace(" Năm", "Y")
-      setTransferContent(`${shortProductName} ${email.split("@")[0]} ${zalo.slice(-4)}`)
+      setTransferContent(`${shortProductName} ${email} ${zalo}`)
       setIsConfirmed(true)
     }
   }
