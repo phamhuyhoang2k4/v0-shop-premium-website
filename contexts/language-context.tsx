@@ -74,6 +74,27 @@ const translations: Translations = {
     after_payment: "Sau khi thanh toán thành công, sản phẩm sẽ được gửi đến email và Zalo của bạn.",
     need_support: "Nếu cần hỗ trợ, vui lòng liên hệ: support@shoppremium.com",
 
+    // Auth
+    login: "Đăng nhập",
+    login_description: "Đăng nhập để truy cập tài khoản của bạn",
+    login_with_google: "Đăng nhập bằng Google",
+    logging_in: "Đang đăng nhập...",
+    logout: "Đăng xuất",
+    by_logging_in: "Bằng cách đăng nhập, bạn đồng ý với",
+    terms: "Điều khoản sử dụng",
+    privacy_policy: "Chính sách bảo mật",
+    loading: "Đang tải",
+
+    // Profile
+    profile: "Hồ sơ",
+    orders: "Đơn hàng",
+    personal_info: "Thông tin cá nhân",
+    manage_personal_info: "Quản lý thông tin cá nhân của bạn",
+    account_settings: "Cài đặt tài khoản",
+    manage_account_settings: "Quản lý cài đặt tài khoản của bạn",
+    account_id: "ID tài khoản",
+    provider: "Nhà cung cấp",
+
     // Footer
     all_rights_reserved: "Tất cả các quyền được bảo lưu.",
 
@@ -149,6 +170,27 @@ const translations: Translations = {
     confirmed_info: "Confirmed Information",
     after_payment: "After successful payment, the product will be sent to your email and Zalo.",
     need_support: "If you need support, please contact: support@shoppremium.com",
+
+    // Auth
+    login: "Login",
+    login_description: "Sign in to access your account",
+    login_with_google: "Login with Google",
+    logging_in: "Logging in...",
+    logout: "Logout",
+    by_logging_in: "By logging in, you agree to our",
+    terms: "Terms of Service",
+    privacy_policy: "Privacy Policy",
+    loading: "Loading",
+
+    // Profile
+    profile: "Profile",
+    orders: "Orders",
+    personal_info: "Personal Information",
+    manage_personal_info: "Manage your personal information",
+    account_settings: "Account Settings",
+    manage_account_settings: "Manage your account settings",
+    account_id: "Account ID",
+    provider: "Provider",
 
     // Footer
     all_rights_reserved: "All rights reserved.",
