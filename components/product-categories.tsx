@@ -10,7 +10,7 @@ const categories = [
     name: "Netflix Premium",
     icon: <Tv className="h-8 w-8 mb-2 text-rose-600" />,
     description: "Trải nghiệm giải trí không giới hạn với Netflix Premium",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/https://gamikey.com/wp-content/uploads/2022/03/Netflix.jpg?height=200&width=300",
   },
   {
     id: "galaxy-play",
