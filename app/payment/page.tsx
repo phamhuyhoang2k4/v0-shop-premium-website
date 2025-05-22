@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { useLanguage } from "@/contexts/language-context"
 import { SiteHeader } from "@/components/site-header"
+import { useCart } from "@/contexts/cart-context"
 
 // Thông tin ngân hàng cập nhật
 const bankInfo = {
@@ -23,6 +24,7 @@ const bankInfo = {
 
 export default function PaymentPage() {
   const { t } = useLanguage()
+  const { clearCart } = useCart()
   const searchParams = useSearchParams()
   const router = useRouter()
   const [copied, setCopied] = useState<string | null>(null)
@@ -34,6 +36,7 @@ export default function PaymentPage() {
   const productName = searchParams.get("productName") || t("product")
   const amount = Number(searchParams.get("amount")) || 0
   const orderId = searchParams.get("orderId") || `ORDER${Date.now()}`
+  const isCart = searchParams.get("isCart") === "true"
 
   // Nội dung chuyển khoản sẽ được cập nhật sau khi xác nhận
   const [transferContent, setTransferContent] = useState(`SHOP ${orderId}`)
@@ -84,9 +87,18 @@ export default function PaymentPage() {
   const handleConfirm = () => {
     if (validateForm()) {
       // Cập nhật nội dung chuyển khoản với thông tin người dùng
-      const shortProductName = productName.replace("Netflix Premium ", "NF").replace(" Tháng", "T").replace(" Năm", "Y")
+      const shortProductName = productName
+        .replace("Netflix Premium ", "NF")
+        .replace(" Tháng", "T")
+        .replace(" Năm", "Y")
+        .substring(0, 20) // Giới hạn độ dài
       setTransferContent(`${shortProductName} ${email} ${zalo}`)
       setIsConfirmed(true)
+
+      // Nếu thanh toán từ giỏ hàng, xóa giỏ hàng sau khi xác nhận
+      if (isCart) {
+        clearCart()
+      }
     }
   }
 
@@ -151,7 +163,7 @@ export default function PaymentPage() {
               <div className="flex flex-col items-center mb-6">
                 <h2 className="text-lg font-semibold mb-2">{t("scan_qr")}</h2>
                 <p className="text-muted-foreground mb-4">{t("order_expires")}</p>
-                <div className="bg-rose-50 text-rose-600 px-4 py-2 rounded-md mb-4">
+                <div className="bg-rose-50 text-rose-600 px-4 py-2 rounded-md mb-4 dark:bg-rose-950">
                   <CountdownTimer minutes={10} onExpire={handleExpire} />
                 </div>
                 <div className="border p-4 rounded-lg mb-4">

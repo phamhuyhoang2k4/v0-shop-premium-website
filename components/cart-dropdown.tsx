@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { ShoppingCart, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,8 +15,29 @@ import { useLanguage } from "@/contexts/language-context"
 import { formatCurrency } from "@/lib/utils"
 
 export function CartDropdown() {
+  const router = useRouter()
   const { items, removeItem, totalItems, totalPrice } = useCart()
   const { t } = useLanguage()
+
+  const handleCheckout = () => {
+    if (items.length === 0) return
+
+    // Tạo tên sản phẩm tổng hợp
+    let productName = ""
+    if (items.length === 1) {
+      productName = items[0].product.name
+    } else {
+      productName = `${items[0].product.name} ${t("and")} ${items.length - 1} ${t("other_items")}`
+    }
+
+    // Tạo ID đơn hàng
+    const orderId = `CART-${Date.now()}`
+
+    // Chuyển hướng đến trang thanh toán
+    router.push(
+      `/payment?productName=${encodeURIComponent(productName)}&amount=${totalPrice}&orderId=${orderId}&isCart=true`,
+    )
+  }
 
   return (
     <DropdownMenu>
@@ -62,9 +83,9 @@ export function CartDropdown() {
                 <span>{t("total")}:</span>
                 <span className="font-bold">{formatCurrency(totalPrice)}</span>
               </div>
-              <Link href="/checkout" className="w-full">
-                <Button className="w-full">{t("checkout")}</Button>
-              </Link>
+              <Button className="w-full" onClick={handleCheckout}>
+                {t("checkout")}
+              </Button>
             </div>
           </>
         )}

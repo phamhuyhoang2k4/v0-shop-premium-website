@@ -50,6 +50,8 @@ const translations: Translations = {
     remove: "Xóa",
     total: "Tổng cộng",
     checkout: "Thanh toán",
+    and: "và",
+    other_items: "sản phẩm khác",
 
     // Payment page
     payment_order: "Thanh toán đơn hàng",
@@ -124,6 +126,8 @@ const translations: Translations = {
     remove: "Remove",
     total: "Total",
     checkout: "Checkout",
+    and: "and",
+    other_items: "other items",
 
     // Payment page
     payment_order: "Order Payment",
