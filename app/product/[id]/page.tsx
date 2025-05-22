@@ -33,7 +33,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="rounded-lg overflow-hidden border">
             <Image
-              src={product.image || "/placeholder.svg"}
+              src={product.image || "https://gamikey.com/wp-content/uploads/2022/03/Netflix.jpg"}
               alt={product.name}
               width={600}
               height={400}
