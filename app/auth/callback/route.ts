@@ -1,29 +1,29 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@supabase/supabase-js"
 
 export async function GET(request: Request) {
-  try {
-    const { searchParams, origin } = new URL(request.url)
-    const code = searchParams.get("code")
-    const next = searchParams.get("next") ?? "/"
+  const requestUrl = new URL(request.url)
+  const code = requestUrl.searchParams.get("code")
 
-    if (code) {
-      try {
-        const supabase = await createClient()
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (!error) {
-          return NextResponse.redirect(`${origin}${next}`)
-        }
-        console.error("Error exchanging code for session:", error)
-      } catch (error) {
-        console.error("Error creating Supabase client or exchanging code:", error)
-      }
+  if (code) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error("Missing Supabase credentials")
+      return NextResponse.redirect(`${requestUrl.origin}/auth/error`)
     }
 
-    // Nếu có lỗi, chuyển hướng về trang lỗi
-    return NextResponse.redirect(`${origin}/auth/error`)
-  } catch (error) {
-    console.error("Unexpected error in callback route:", error)
-    return NextResponse.redirect(`${origin}/auth/error`)
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    try {
+      await supabase.auth.exchangeCodeForSession(code)
+    } catch (error) {
+      console.error("Error exchanging code for session:", error)
+      return NextResponse.redirect(`${requestUrl.origin}/auth/error`)
+    }
   }
+
+  // Chuyển hướng về trang chủ sau khi đăng nhập thành công
+  return NextResponse.redirect(requestUrl.origin)
 }

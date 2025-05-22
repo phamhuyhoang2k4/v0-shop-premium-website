@@ -2,99 +2,103 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
+import type { User, Session } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
 
 type AuthContextType = {
   user: User | null
+  session: Session | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  session: null,
+  loading: true,
+  signInWithGoogle: async () => {},
+  signOut: async () => {},
+})
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [supabase, setSupabase] = useState<any>(null)
+  const router = useRouter()
 
-  // Khởi tạo Supabase client chỉ ở phía client
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSupabase(createClient())
-    }
-  }, [])
-
-  // Lấy thông tin phiên và thiết lập listener khi Supabase client đã sẵn sàng
-  useEffect(() => {
-    if (!supabase) return
-
-    const getUser = async () => {
-      try {
-        const { data } = await supabase.auth.getSession()
-        setUser(data.session?.user || null)
-      } catch (error) {
-        console.error("Error getting session:", error)
-      } finally {
-        setLoading(false)
-      }
-
-      try {
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-          setUser(session?.user || null)
-        })
-
-        return () => {
-          if (authListener?.subscription) {
-            authListener.subscription.unsubscribe()
-          }
-        }
-      } catch (error) {
-        console.error("Error setting up auth listener:", error)
-      }
-    }
-
-    getUser()
-  }, [supabase])
-
-  const signInWithGoogle = async () => {
-    if (!supabase) {
-      console.error("Supabase client not initialized")
-      return
-    }
+    // Chỉ chạy ở phía client
+    if (typeof window === "undefined") return
 
     try {
-      await supabase.auth.signInWithOAuth({
+      const supabase = createClient()
+
+      // Lấy phiên hiện tại
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
+
+      // Thiết lập listener cho thay đổi trạng thái xác thực
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+
+        // Refresh dữ liệu khi trạng thái xác thực thay đổi
+        router.refresh()
+      })
+
+      return () => {
+        subscription.unsubscribe()
+      }
+    } catch (error) {
+      console.error("Error in auth setup:", error)
+      setLoading(false)
+    }
+  }, [router])
+
+  const signInWithGoogle = async () => {
+    try {
+      const supabase = createClient()
+
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
+
+      if (error) {
+        throw error
+      }
     } catch (error) {
       console.error("Error signing in with Google:", error)
+      alert("Đăng nhập thất bại. Vui lòng thử lại sau.")
     }
   }
 
   const signOut = async () => {
-    if (!supabase) {
-      console.error("Supabase client not initialized")
-      return
-    }
-
     try {
+      const supabase = createClient()
       await supabase.auth.signOut()
+      router.push("/")
     } catch (error) {
       console.error("Error signing out:", error)
     }
   }
 
-  return <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
+  return useContext(AuthContext)
 }

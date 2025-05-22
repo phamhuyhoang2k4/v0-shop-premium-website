@@ -16,6 +16,7 @@ const translations: Translations = {
     menu: "Menu",
     shop_premium: "SHOP PREMIUM",
     support: "Hỗ trợ",
+    home: "Trang chủ",
 
     // Categories
     product_categories: "Danh mục sản phẩm",
@@ -113,6 +114,7 @@ const translations: Translations = {
     menu: "Menu",
     shop_premium: "SHOP PREMIUM",
     support: "Support",
+    home: "Home",
 
     // Categories
     product_categories: "Product Categories",

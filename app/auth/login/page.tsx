@@ -12,7 +12,7 @@ import { useLanguage } from "@/contexts/language-context"
 
 export default function LoginPage() {
   const { t } = useLanguage()
-  const { signInWithGoogle, user } = useAuth()
+  const { user, signInWithGoogle } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 

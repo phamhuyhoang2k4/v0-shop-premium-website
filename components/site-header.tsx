@@ -46,13 +46,16 @@ export function SiteHeader() {
           </SheetTrigger>
           <SheetContent side="left">
             <nav className="flex flex-col gap-6 mt-8">
-              <Link href="#netflix" className="text-lg font-medium hover:text-rose-600 transition-colors">
+              <Link href="/" className="text-lg font-medium hover:text-rose-600 transition-colors">
+                {t("home")}
+              </Link>
+              <Link href="/category/netflix" className="text-lg font-medium hover:text-rose-600 transition-colors">
                 Netflix
               </Link>
-              <Link href="#galaxy-play" className="text-lg font-medium hover:text-rose-600 transition-colors">
+              <Link href="/category/galaxy-play" className="text-lg font-medium hover:text-rose-600 transition-colors">
                 Galaxy Play
               </Link>
-              <Link href="#google" className="text-lg font-medium hover:text-rose-600 transition-colors">
+              <Link href="/category/google" className="text-lg font-medium hover:text-rose-600 transition-colors">
                 Google
               </Link>
 
@@ -70,11 +73,11 @@ export function SiteHeader() {
                 <div className="border-t pt-6 flex flex-col gap-2">
                   <div className="flex items-center gap-3 mb-2">
                     <Avatar>
-                      <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
+                      <AvatarImage src={user.user_metadata?.avatar_url || ""} />
                       <AvatarFallback>{getUserInitials()}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium">{user.user_metadata?.full_name}</p>
+                      <p className="font-medium">{user.user_metadata?.full_name || user.email}</p>
                       <p className="text-sm text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
@@ -154,7 +157,7 @@ export function SiteHeader() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.user_metadata?.avatar_url || "/placeholder.svg"} />
+                    <AvatarImage src={user.user_metadata?.avatar_url || ""} />
                     <AvatarFallback>{getUserInitials()}</AvatarFallback>
                   </Avatar>
                 </Button>
@@ -162,7 +165,7 @@ export function SiteHeader() {
               <DropdownMenuContent align="end">
                 <div className="flex items-center gap-2 p-2">
                   <div>
-                    <p className="font-medium">{user.user_metadata?.full_name}</p>
+                    <p className="font-medium">{user.user_metadata?.full_name || user.email}</p>
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                 </div>
