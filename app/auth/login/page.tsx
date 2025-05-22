@@ -5,7 +5,6 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { FcGoogle } from "react-icons/fc"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { SiteHeader } from "@/components/site-header"
@@ -13,13 +12,12 @@ import { useAuth } from "@/contexts/auth-context"
 import { useLanguage } from "@/contexts/language-context"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
 export default function LoginPage() {
   const { t } = useLanguage()
-  const { user, signInWithGoogle, signInWithEmailPassword, authError } = useAuth()
+  const { user, signInWithEmailPassword, authError } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,17 +29,6 @@ export default function LoginPage() {
   if (user) {
     router.push("/")
     return null
-  }
-
-  const handleGoogleLogin = async () => {
-    try {
-      setIsLoading(true)
-      await signInWithGoogle()
-    } catch (error: any) {
-      console.error("Lỗi đăng nhập:", error)
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   const handleEmailPasswordLogin = async (e: React.FormEvent) => {
@@ -87,74 +74,48 @@ export default function LoginPage() {
             <CardDescription>{t("login_description")}</CardDescription>
           </CardHeader>
           <CardContent>
-            {authError === "missing_oauth_secret" && (
+            {authError && (
               <Alert variant="destructive" className="mb-4">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>{t("configuration_error")}</AlertTitle>
-                <AlertDescription>
-                  {t("missing_oauth_secret")}
-                  <div className="mt-2 text-xs">
-                    <Link href="/auth/oauth-setup-guide" className="underline">
-                      {t("view_setup_guide")}
-                    </Link>
-                  </div>
-                </AlertDescription>
+                <AlertTitle>{t("login_error")}</AlertTitle>
+                <AlertDescription>{authError}</AlertDescription>
               </Alert>
             )}
 
-            <Tabs defaultValue="google" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="google">{t("google")}</TabsTrigger>
-                <TabsTrigger value="email">{t("email")}</TabsTrigger>
-              </TabsList>
-              <TabsContent value="google" className="pt-4">
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center gap-2 h-12"
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                >
-                  <FcGoogle className="h-5 w-5" />
-                  {isLoading ? t("logging_in") : t("login_with_google")}
-                </Button>
-              </TabsContent>
-              <TabsContent value="email" className="pt-4">
-                <form onSubmit={handleEmailPasswordLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">{t("email")}</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                    />
-                    {emailError && <p className="text-sm text-destructive">{emailError}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">{t("password")}</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? t("logging_in") : t("login")}
-                  </Button>
-                </form>
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    {t("dont_have_account")}{" "}
-                    <Link href="/auth/register" className="text-primary underline">
-                      {t("register")}
-                    </Link>
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <form onSubmit={handleEmailPasswordLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("email")}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                />
+                {emailError && <p className="text-sm text-destructive">{emailError}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">{t("password")}</Label>
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
+              </div>
+              <div className="text-right">
+                <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                  {t("forgot_password")}
+                </Link>
+              </div>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? t("logging_in") : t("login")}
+              </Button>
+            </form>
+            <div className="mt-4 text-center">
+              <p className="text-sm text-muted-foreground">
+                {t("dont_have_account")}{" "}
+                <Link href="/auth/register" className="text-primary hover:underline">
+                  {t("register")}
+                </Link>
+              </p>
+            </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">

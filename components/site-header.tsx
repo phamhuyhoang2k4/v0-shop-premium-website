@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { Menu, Moon, Sun, Globe, HeadphonesIcon, User, LogOut } from "lucide-react"
 import { useTheme } from "next-themes"
-import { FcGoogle } from "react-icons/fc"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -89,8 +88,8 @@ export function SiteHeader() {
               ) : (
                 <Link href="/auth/login" className="border-t pt-6">
                   <Button variant="outline" className="w-full flex items-center gap-2">
-                    <FcGoogle className="h-4 w-4" />
-                    {t("login_with_google")}
+                    <User className="h-4 w-4" />
+                    {t("login")}
                   </Button>
                 </Link>
               )}
