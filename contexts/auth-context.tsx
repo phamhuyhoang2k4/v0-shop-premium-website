@@ -12,7 +12,9 @@ type AuthContextType = {
   session: Session | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
+  signInWithEmailPassword: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  authError: string | null
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,13 +22,16 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   signInWithGoogle: async () => {},
+  signInWithEmailPassword: async () => {},
   signOut: async () => {},
+  authError: null,
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [authError, setAuthError] = useState<string | null>(null)
   const router = useRouter()
   const { t } = useLanguage()
 
@@ -66,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router])
 
   const signInWithGoogle = async () => {
+    setAuthError(null)
     try {
       const supabase = createClient()
 
@@ -77,15 +83,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) {
-        // Xử lý lỗi cụ thể
+        // Xử lý các lỗi cụ thể
         if (error.message.includes("provider is not enabled")) {
+          setAuthError("google_provider_not_enabled")
           toast({
             title: t("login_error"),
             description: t("google_provider_not_enabled"),
             variant: "destructive",
           })
-          console.error("Google provider is not enabled in Supabase. Please enable it in the Supabase dashboard.")
+        } else if (error.message.includes("missing OAuth secret")) {
+          setAuthError("missing_oauth_secret")
+          toast({
+            title: t("login_error"),
+            description: t("missing_oauth_secret"),
+            variant: "destructive",
+          })
         } else {
+          setAuthError(error.message)
           toast({
             title: t("login_error"),
             description: error.message,
@@ -96,6 +110,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error signing in with Google:", error)
+    }
+  }
+
+  const signInWithEmailPassword = async (email: string, password: string) => {
+    setAuthError(null)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        setAuthError(error.message)
+        toast({
+          title: t("login_error"),
+          description: error.message,
+          variant: "destructive",
+        })
+        throw error
+      }
+    } catch (error) {
+      console.error("Error signing in with email/password:", error)
     }
   }
 
@@ -115,7 +152,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider
+      value={{ user, session, loading, signInWithGoogle, signInWithEmailPassword, signOut, authError }}
+    >
       {children}
     </AuthContext.Provider>
   )
