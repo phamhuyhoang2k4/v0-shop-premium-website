@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button"
 import { CountdownTimer } from "@/components/countdown-timer"
 import { formatCurrency } from "@/lib/utils"
 
-// Thông tin ngân hàng cố định
+// Thông tin ngân hàng cập nhật
 const bankInfo = {
-  bankName: "TECHCOMBANK",
-  accountName: "NGUYEN VAN A",
-  accountNumber: "19036217123456",
+  bankName: "VCCB (Bản Việt)",
+  accountName: "Phạm Huy Hoàng",
+  accountNumber: "9021964441235",
 }
 
 export default function PaymentPage() {
@@ -70,8 +70,8 @@ export default function PaymentPage() {
               </div>
               <div className="border p-4 rounded-lg mb-4">
                 <Image
-                  src="/placeholder.svg?height=300&width=300&text=QR+Code"
-                  alt="QR Code"
+                  src="https://raw.githubusercontent.com/phamhuyhoang2k4/images/refs/heads/main/z6628844786519_5c3a82d5cf3df31a3f3ae9f68d46e65b.jpg"
+                  alt="QR Code Thanh Toán"
                   width={200}
                   height={200}
                   className="mx-auto"
